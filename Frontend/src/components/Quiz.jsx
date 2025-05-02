@@ -1,8 +1,8 @@
+
 import { useState, useEffect } from 'react';
 import axios from 'axios'; 
 
 const questionsData = [
-    
   {
     "id": 1,
     "question": "What is React?",
@@ -123,9 +123,7 @@ const questionsData = [
     "options": ["Building user interfaces", "Database design", "API creation", "Backend services"],
     "answer": "Building user interfaces"
   }
-]
-
-;
+];
 
 // Helper function to shuffle options (Fisher-Yates)
 const shuffleArray = (array) => {
@@ -145,8 +143,7 @@ export default function Quiz() {
   const [answers, setAnswers] = useState([]);
   const [quizComplete, setQuizComplete] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
-  const [showFeedback, setShowFeedback] = useState(false);
-  const [submitStatus, setSubmitStatus] = useState(''); // Added to track submission status
+  const [submitStatus, setSubmitStatus] = useState(''); // Track submission status
 
   // Load and shuffle questions
   useEffect(() => {
@@ -165,7 +162,6 @@ export default function Quiz() {
   // Handle option selection
   const handleOptionClick = (option) => {
     setSelected(option);
-    setShowFeedback(true);
   };
 
   // Handle moving to the next question or finishing
@@ -191,7 +187,6 @@ export default function Quiz() {
     }
   
     setAnswers(updatedAnswers);
-    setShowFeedback(false);
   
     if (current >= questions.length - 1) {
       setQuizComplete(true);
@@ -200,7 +195,6 @@ export default function Quiz() {
         const userId = localStorage.getItem('userId'); // Assuming userId is stored
         if (userId) {
           setSubmitStatus('Submitting score...');
-          // Use the scores endpoint which is set up to handle score updates
           const response = await axios.post('http://localhost:1814/api/v2/Quizdb/scores', {
             userId,
             score: newScore,
@@ -231,7 +225,6 @@ export default function Quiz() {
     setSelected(null);
     setAnswers([]);
     setQuizComplete(false);
-    setShowFeedback(false);
     setSubmitStatus('');
 
     // Re-shuffle questions
@@ -331,15 +324,6 @@ export default function Quiz() {
             }`}
           >
             {option}
-            {showFeedback && selected === option && (
-              <span
-                className={`ml-2 ${
-                  option === questions[current].answer ? 'text-green-600' : 'text-red-600'
-                }`}
-              >
-                {option === questions[current].answer ? '✓ Correct' : '✗ Incorrect'}
-              </span>
-            )}
           </li>
         ))}
       </ul>
